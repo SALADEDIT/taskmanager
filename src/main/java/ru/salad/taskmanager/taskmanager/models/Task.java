@@ -1,14 +1,18 @@
 package ru.salad.taskmanager.taskmanager.models;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
+import lombok.Data;
 
 import java.time.Instant;
 
 @Entity
 @Table(name = "Task")
-public class TaskModel {
+@Data
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class Task {
 
     @Id
     @Column(name = "id")
@@ -25,10 +29,12 @@ public class TaskModel {
     @Column(name = "dead_line")
     private Instant deadLine;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "status")
     private Status status;
 
-
-
+    @ManyToOne
+    @JoinColumn(name = "company_id")
+    private Company company;
 
 }

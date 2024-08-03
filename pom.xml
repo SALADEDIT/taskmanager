@@ -67,7 +67,6 @@
 			<artifactId>commons-collections4</artifactId>
 			<version>4.5.0-M2</version>
 		</dependency>
-
 	</dependencies>
 
 	<build>
@@ -85,6 +84,7 @@
 				</configuration>
 			</plugin>
 		</plugins>
+
 	</build>
 
 </project>

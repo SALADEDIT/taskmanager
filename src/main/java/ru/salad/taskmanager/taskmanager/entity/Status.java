@@ -1,4 +1,4 @@
-package ru.salad.taskmanager.taskmanager.models;
+package ru.salad.taskmanager.taskmanager.entity;
 
 public enum Status {
     DONE,

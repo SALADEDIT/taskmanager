@@ -1,11 +1,12 @@
 package ru.salad.taskmanager.taskmanager.controllers;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.salad.taskmanager.taskmanager.entity.Company;
 import ru.salad.taskmanager.taskmanager.entity.Status;
 import ru.salad.taskmanager.taskmanager.entity.Task;
-import ru.salad.taskmanager.taskmanager.repositories.TaskRepository;
-import ru.salad.taskmanager.taskmanager.services.CompanyService;
 import ru.salad.taskmanager.taskmanager.services.TaskService;
 
 import java.util.List;
@@ -18,7 +19,6 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RequiredArgsConstructor
 public class TaskController {
     private final TaskService taskService;
-    private final CompanyService companyService;
 
     @GetMapping("/getTask")
     public Optional<Task> getTaskById(Integer id) {
@@ -30,19 +30,19 @@ public class TaskController {
         return taskService.getAllTaskByCompanyId(id);
     }
 
-//    @GetMapping("/deleteTask")
-//    public Task deleteTaskById(Integer id) {
-//        return taskService.deleteTaskById(id);
-//    }
+    @PostMapping("/updateTask")
+    public Task updateTaskStatus(Integer id, @RequestParam Status status) {
+        return taskService.updateTaskStatus(id, status);
+    }
 
-//    @PostMapping("/updateTask")
-//    public Task updateTaskStatus(@RequestBody Task task, Integer id, Status newStatus) {
-//        task.setStatus("CLOSED");
-//    }
+    @DeleteMapping("/deleteTask")
+    public void deleteTask(Integer id) {
+        taskService.deleteTask(id);
+    }
 
-//    @PostMapping("/update")
-//    public Task updateTask(@RequestBody Task task) {
-//        task.setTitle("ahahahaha");
-//        return task;
-//    }
+    @PostMapping("/createTask")
+    public ResponseEntity<Task> createTask(Task task) {
+        Task createdTask = taskService.createTask(task);
+        return new ResponseEntity<>(createdTask, HttpStatus.CREATED);
+    }
 }

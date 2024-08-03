@@ -1,12 +1,13 @@
 package ru.salad.taskmanager.taskmanager.controllers;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import ru.salad.taskmanager.taskmanager.entity.Company;
 import ru.salad.taskmanager.taskmanager.services.CompanyService;
+
+import java.util.Optional;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -15,12 +16,17 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 public class CompanyController {
 
-    @Autowired
+
     private CompanyService companyService;
 
     @GetMapping("/getCompany")
-    public Company getById(Integer id) {
+    public Optional<Company> getById(Integer id) {
         return companyService.getById(id);
     }
 
+    @PostMapping("/createCompany")
+    public ResponseEntity<Company> createCompany(Company company) {
+        Company createdCompany = companyService.createCompany(company);
+        return new ResponseEntity<>(createdCompany, HttpStatus.CREATED);
+    }
 }

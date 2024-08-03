@@ -14,7 +14,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class TaskService {
     private final TaskRepository taskRepository;
-    private final CompanyRepository companyRepository;
+
 
     public Optional<Task> getTaskById(Integer id) {
         return taskRepository.findById(id);
@@ -24,15 +24,20 @@ public class TaskService {
         return taskRepository.findAllByCompanyId(companyId);
     }
 
-    public Task deleteTaskById(Integer id) {
-        return taskRepository.deleteTaskById(id);
-    }
-
     public Task updateTaskStatus(Integer taskId, Status status) {
         Task task = taskRepository.findById(taskId)
-                .orElseThrow(() -> new RuntimeException("Task not found"));
+                .orElseThrow(() -> new RuntimeException("Таска не найдена"));
         task.setStatus(status);
         return taskRepository.save(task);
+    }
+
+    public Task createTask(Task task) {
+        return taskRepository.save(task);
+    }
+
+
+    public void deleteTask(Integer id) {
+        taskRepository.deleteById(id);
     }
 
 

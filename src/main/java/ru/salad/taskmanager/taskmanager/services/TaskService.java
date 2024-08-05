@@ -1,27 +1,32 @@
 package ru.salad.taskmanager.taskmanager.services;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import ru.salad.taskmanager.taskmanager.entity.Company;
 import ru.salad.taskmanager.taskmanager.entity.Status;
 import ru.salad.taskmanager.taskmanager.entity.Task;
 import ru.salad.taskmanager.taskmanager.repositories.CompanyRepository;
 import ru.salad.taskmanager.taskmanager.repositories.TaskRepository;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class TaskService {
+
+
     private final TaskRepository taskRepository;
+
+    private final CompanyRepository companyRepository;
 
 
     public Optional<Task> getTaskById(Integer id) {
-        return taskRepository.findById(id);
-    }
-
-    public List<Task> getAllTaskByCompanyId(Integer companyId) {
-        return taskRepository.findAllByCompanyId(companyId);
+        return Optional.ofNullable(taskRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Таска с ID " + id + " не найдена")));
     }
 
     public Task updateTaskStatus(Integer taskId, Status status) {
@@ -38,6 +43,16 @@ public class TaskService {
 
     public void deleteTask(Integer id) {
         taskRepository.deleteById(id);
+    }
+
+    public Page<Task> getTasks(Integer companyId, Integer page, Integer size, String sortBy, String sortDirection) {
+        Company company = companyRepository.findById(companyId)
+                .orElseThrow(() -> new RuntimeException("Company not found"));
+
+        Sort sort = Sort.by(Sort.Direction.fromString(sortDirection), sortBy);
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        return taskRepository.findByCompany(company, pageable);
     }
 
 

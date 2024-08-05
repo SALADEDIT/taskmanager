@@ -1,15 +1,14 @@
 package ru.salad.taskmanager.taskmanager.controllers;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.salad.taskmanager.taskmanager.entity.Company;
 import ru.salad.taskmanager.taskmanager.entity.Status;
 import ru.salad.taskmanager.taskmanager.entity.Task;
 import ru.salad.taskmanager.taskmanager.services.TaskService;
 
-import java.util.List;
 import java.util.Optional;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -20,14 +19,9 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 public class TaskController {
     private final TaskService taskService;
 
-    @GetMapping("/getTask")
+    @GetMapping("/getTaskById")
     public Optional<Task> getTaskById(Integer id) {
         return taskService.getTaskById(id);
-    }
-
-    @GetMapping("/getTaskByCompany")
-    public List<Task> getAllTaskByCompanyId(Integer id) {
-        return taskService.getAllTaskByCompanyId(id);
     }
 
     @PostMapping("/updateTask")
@@ -44,5 +38,16 @@ public class TaskController {
     public ResponseEntity<Task> createTask(Task task) {
         Task createdTask = taskService.createTask(task);
         return new ResponseEntity<>(createdTask, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/getPageable")
+    public Page<Task> getTasks(
+            @RequestParam Integer companyId,
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "10") Integer size,
+            @RequestParam(defaultValue = "status") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortDirection
+    ) {
+        return taskService.getTasks(companyId, page, size, sortBy, sortDirection);
     }
 }

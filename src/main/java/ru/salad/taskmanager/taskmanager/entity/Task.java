@@ -3,7 +3,6 @@ package ru.salad.taskmanager.taskmanager.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
@@ -46,4 +45,16 @@ public class Task {
     @JsonBackReference
     private Company company;
 
+    public Task(String title, String description, Instant deadLine, Status status, Company company) {
+
+        this.title = title;
+        this.description = description;
+        this.deadLine = deadLine;
+        this.status = status;
+        this.company = company;
+    }
+
+
+    public Task(Integer taskId) {
+    }
 }

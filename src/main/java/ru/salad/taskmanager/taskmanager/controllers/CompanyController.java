@@ -1,6 +1,6 @@
 package ru.salad.taskmanager.taskmanager.controllers;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,20 +13,30 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
 @RequestMapping(value = "/company", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
-
+@RequiredArgsConstructor
 public class CompanyController {
 
 
-    private CompanyService companyService;
+    private final CompanyService companyService;
 
-    @GetMapping("/getCompany")
-    public Optional<Company> getById(Integer id) {
-        return companyService.getById(id);
+    @GetMapping("/getCompanyById")
+    public Optional<Company> getCompanyById(Integer id) {
+        return companyService.getCompanyById(id);
     }
 
     @PostMapping("/createCompany")
     public ResponseEntity<Company> createCompany(Company company) {
         Company createdCompany = companyService.createCompany(company);
         return new ResponseEntity<>(createdCompany, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/updateCompany")
+    public Company updateCompanyName(Integer id, @RequestParam String name) {
+        return companyService.updateCompanyName(id, name);
+    }
+
+    @DeleteMapping("/deleteCompany")
+    public void deleteCompany(Integer id) {
+        companyService.deleteCompany(id);
     }
 }

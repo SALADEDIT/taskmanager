@@ -12,11 +12,24 @@ import java.util.Optional;
 public class CompanyService {
     private final CompanyRepository companyRepository;
 
-    public Optional<Company> getById(Integer id) {
-        return companyRepository.findById(id);
+
+    public Optional<Company> getCompanyById(Integer id) {
+        return Optional.ofNullable(companyRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Компания с ID" + id + " не найдена")));
     }
 
     public Company createCompany(Company company) {
         return companyRepository.save(company);
+    }
+
+    public Company updateCompanyName(Integer companyId, String name) {
+        Company company = companyRepository.findById(companyId)
+                .orElseThrow(() -> new RuntimeException("Компания не найдена"));
+        company.setName(name);
+        return companyRepository.save(company);
+    }
+
+    public void deleteCompany(Integer id) {
+        companyRepository.deleteById(id);
     }
 }

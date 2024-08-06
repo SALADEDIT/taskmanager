@@ -25,6 +25,7 @@ public class TaskService {
 
 
     public Optional<Task> getTaskById(Integer id) {
+
         return Optional.ofNullable(taskRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Таска с ID " + id + " не найдена")));
     }
@@ -47,7 +48,7 @@ public class TaskService {
 
     public Page<Task> getTasks(Integer companyId, Integer page, Integer size, String sortBy, String sortDirection) {
         Company company = companyRepository.findById(companyId)
-                .orElseThrow(() -> new RuntimeException("Company not found"));
+                .orElseThrow(() -> new RuntimeException("Компания не найдена"));
 
         Sort sort = Sort.by(Sort.Direction.fromString(sortDirection), sortBy);
         Pageable pageable = PageRequest.of(page, size, sort);

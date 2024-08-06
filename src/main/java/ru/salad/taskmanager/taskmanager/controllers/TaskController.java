@@ -14,40 +14,40 @@ import java.util.Optional;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
-@RequestMapping(value = "/tasks", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/task", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 public class TaskController {
-    private final TaskService taskService;
+    private final TaskService service;
 
-    @GetMapping("/getTaskById")
-    public Optional<Task> getTaskById(Integer id) {
-        return taskService.getTaskById(id);
+    @GetMapping("{id}")
+    public Optional<Task> getById(@PathVariable Integer id) {
+        return service.getById(id);
     }
 
-    @PostMapping("/updateTask")
-    public Task updateTaskStatus(Integer id, @RequestParam Status status) {
-        return taskService.updateTaskStatus(id, status);
+    @PutMapping("/{id}")
+    public Task updateStatus(@PathVariable Integer id, @RequestBody Status status) {
+        return service.updateStatus(id, status);
     }
 
-    @DeleteMapping("/deleteTask")
-    public void deleteTask(Integer id) {
-        taskService.deleteTask(id);
+    @DeleteMapping
+    public void delete(Integer id) {
+        service.deleteTask(id);
     }
 
-    @PostMapping("/createTask")
-    public ResponseEntity<Task> createTask(Task task) {
-        Task createdTask = taskService.createTask(task);
+    @PostMapping
+    public ResponseEntity<Task> create(@RequestBody Task task) {
+        Task createdTask = service.createTask(task);
         return new ResponseEntity<>(createdTask, HttpStatus.CREATED);
     }
 
-    @GetMapping("/getPageable")
-    public Page<Task> getTasks(
+    @GetMapping
+    public Page<Task> getPage(
             @RequestParam Integer companyId,
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(defaultValue = "10") Integer size,
             @RequestParam(defaultValue = "status") String sortBy,
             @RequestParam(defaultValue = "asc") String sortDirection
     ) {
-        return taskService.getTasks(companyId, page, size, sortBy, sortDirection);
+        return service.getTasks(companyId, page, size, sortBy, sortDirection);
     }
 }

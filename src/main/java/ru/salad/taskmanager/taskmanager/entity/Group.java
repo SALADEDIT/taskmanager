@@ -1,8 +1,6 @@
 package ru.salad.taskmanager.taskmanager.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,11 +9,11 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 @Entity
-@Table(name = "company")
+@Table(name = "tm_group")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Company {
+public class Group {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,12 +24,12 @@ public class Company {
     @Column(name = "name")
     private String name;
 
-    @OneToMany(mappedBy = "company", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "group", cascade = CascadeType.ALL)
     @JsonManagedReference
     List<Task> tasks;
 
-    public Company(Integer id, String name) {
-        this.name = name;
+    public Group(Integer id, String name) {
         this.id = id;
+        this.name = name;
     }
 }

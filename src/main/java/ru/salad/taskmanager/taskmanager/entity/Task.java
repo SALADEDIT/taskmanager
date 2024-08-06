@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 import java.time.Instant;
 
 @Entity
-@Table(name = "Task")
+@Table(name = "tm_task")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -41,20 +41,17 @@ public class Task {
     private Status status;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "company_id")
+    @JoinColumn(name = "group_id")
     @JsonBackReference
-    private Company company;
+    private Group group;
 
-    public Task(String title, String description, Instant deadLine, Status status, Company company) {
+    public Task(String title, String description, Instant deadLine, Status status, Group group) {
 
         this.title = title;
         this.description = description;
         this.deadLine = deadLine;
         this.status = status;
-        this.company = company;
+        this.group = group;
     }
 
-
-    public Task(Integer taskId) {
-    }
 }

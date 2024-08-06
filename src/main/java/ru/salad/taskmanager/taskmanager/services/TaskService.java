@@ -6,10 +6,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import ru.salad.taskmanager.taskmanager.entity.Company;
+import ru.salad.taskmanager.taskmanager.entity.Group;
 import ru.salad.taskmanager.taskmanager.entity.Status;
 import ru.salad.taskmanager.taskmanager.entity.Task;
-import ru.salad.taskmanager.taskmanager.repositories.CompanyRepository;
+import ru.salad.taskmanager.taskmanager.repositories.GroupRepository;
 import ru.salad.taskmanager.taskmanager.repositories.TaskRepository;
 
 import java.util.Optional;
@@ -21,17 +21,17 @@ public class TaskService {
 
     private final TaskRepository taskRepository;
 
-    private final CompanyRepository companyRepository;
+    private final GroupRepository groupRepository;
 
 
-    public Optional<Task> getTaskById(Integer id) {
+    public Optional<Task> getById(Integer id) {
 
         return Optional.ofNullable(taskRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Таска с ID " + id + " не найдена")));
     }
 
-    public Task updateTaskStatus(Integer taskId, Status status) {
-        Task task = taskRepository.findById(taskId)
+    public Task updateStatus(Integer id, Status status) {
+        Task task = taskRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Таска не найдена"));
         task.setStatus(status);
         return taskRepository.save(task);
@@ -47,13 +47,13 @@ public class TaskService {
     }
 
     public Page<Task> getTasks(Integer companyId, Integer page, Integer size, String sortBy, String sortDirection) {
-        Company company = companyRepository.findById(companyId)
+        Group group = groupRepository.findById(companyId)
                 .orElseThrow(() -> new RuntimeException("Компания не найдена"));
 
         Sort sort = Sort.by(Sort.Direction.fromString(sortDirection), sortBy);
         Pageable pageable = PageRequest.of(page, size, sort);
 
-        return taskRepository.findByCompany(company, pageable);
+        return taskRepository.findByCompany(group, pageable);
     }
 
 

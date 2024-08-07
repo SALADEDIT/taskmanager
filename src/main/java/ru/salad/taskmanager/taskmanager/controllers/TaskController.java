@@ -5,7 +5,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.salad.taskmanager.taskmanager.entity.Status;
 import ru.salad.taskmanager.taskmanager.entity.Task;
 import ru.salad.taskmanager.taskmanager.services.TaskService;
 
@@ -24,9 +23,9 @@ public class TaskController {
         return service.getById(id);
     }
 
-    @PutMapping("/{id}")
-    public Task updateStatus(@PathVariable Integer id, @RequestBody Status status) {
-        return service.updateStatus(id, status);
+    @PutMapping("{id}")
+    public Task update(@PathVariable Integer id, @RequestBody Task request) {
+        return service.update(id, request);
     }
 
     @DeleteMapping

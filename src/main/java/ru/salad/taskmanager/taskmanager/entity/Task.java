@@ -27,7 +27,6 @@ public class Task {
     private Integer id;
 
     @Column(name = "title")
-    @NotEmpty(message = "Заголовок не должен быть пустым")
     private String title;
 
     @Column(name = "description")
@@ -46,12 +45,10 @@ public class Task {
     private Group group;
 
     public Task(String title, String description, Instant deadLine, Status status, Group group) {
-
         this.title = title;
         this.description = description;
         this.deadLine = deadLine;
         this.status = status;
         this.group = group;
     }
-
 }

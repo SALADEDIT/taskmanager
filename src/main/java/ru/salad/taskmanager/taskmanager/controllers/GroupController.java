@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.salad.taskmanager.taskmanager.entity.Group;
+import ru.salad.taskmanager.taskmanager.entity.Task;
 import ru.salad.taskmanager.taskmanager.services.GroupService;
 
 import java.util.Optional;
@@ -17,26 +18,26 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 public class GroupController {
 
 
-    private final GroupService groupService;
+    private final GroupService service;
 
-    @GetMapping("/getCompanyById")
-    public Optional<Group> getCompanyById(Integer id) {
-        return groupService.getCompanyById(id);
+    @GetMapping("{id}")
+    public Optional<Group> getById(@PathVariable Integer id) {
+        return service.getById(id);
     }
 
-    @PostMapping("/createCompany")
-    public ResponseEntity<Group> createCompany(@RequestBody Group group) {
-        Group createdGroup = groupService.createCompany(group);
+    @PostMapping
+    public ResponseEntity<Group> create(@RequestBody Group group) {
+        Group createdGroup = service.create(group);
         return new ResponseEntity<>(createdGroup, HttpStatus.CREATED);
     }
 
-    @PutMapping("/updateCompany")
-    public Group updateCompanyName(Integer id, @RequestBody String name) {
-        return groupService.updateCompanyName(id, name);
+    @PutMapping("{id}")
+    public Group update(@PathVariable Integer id, @RequestBody Group request) {
+        return service.update(id, request);
     }
 
-    @DeleteMapping("/deleteCompany")
-    public void deleteCompany(Integer id) {
-        groupService.deleteCompany(id);
+    @DeleteMapping
+    public void delete(Integer id) {
+        service.delete(id);
     }
 }

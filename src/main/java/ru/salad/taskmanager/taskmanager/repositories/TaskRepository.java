@@ -10,6 +10,6 @@ import ru.salad.taskmanager.taskmanager.entity.Task;
 @Repository
 public interface TaskRepository extends JpaRepository<Task, Integer> {
 
-    Page<Task> findByCompany(Group group, Pageable pageable);
+    Page<Task> findByGroup(Group group, Pageable pageable);
 
 }

@@ -26,7 +26,7 @@ public class Group {
 
     @OneToMany(mappedBy = "group", cascade = CascadeType.ALL)
     @JsonManagedReference
-    List<Task> tasks;
+    private List<Task> tasks;
 
     public Group(Integer id, String name) {
         this.id = id;

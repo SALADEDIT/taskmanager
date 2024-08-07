@@ -7,7 +7,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.salad.taskmanager.taskmanager.entity.Group;
-import ru.salad.taskmanager.taskmanager.entity.Status;
 import ru.salad.taskmanager.taskmanager.entity.Task;
 import ru.salad.taskmanager.taskmanager.repositories.GroupRepository;
 import ru.salad.taskmanager.taskmanager.repositories.TaskRepository;
@@ -30,10 +29,23 @@ public class TaskService {
                 .orElseThrow(() -> new RuntimeException("Таска с ID " + id + " не найдена")));
     }
 
-    public Task updateStatus(Integer id, Status status) {
+
+    public Task update(Integer id, Task request) {
         Task task = taskRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Таска не найдена"));
-        task.setStatus(status);
+
+        task.setTitle(request.getTitle());
+        task.setDescription(request.getDescription());
+        task.setDeadLine(request.getDeadLine());
+        task.setStatus(request.getStatus());
+
+
+        if (request.getGroup() != null) {
+            Group group = groupRepository.findById(request.getGroup().getId())
+                    .orElseThrow(() -> new RuntimeException("Группа не найдена"));
+            task.setGroup(group);
+        }
+
         return taskRepository.save(task);
     }
 
@@ -53,7 +65,7 @@ public class TaskService {
         Sort sort = Sort.by(Sort.Direction.fromString(sortDirection), sortBy);
         Pageable pageable = PageRequest.of(page, size, sort);
 
-        return taskRepository.findByCompany(group, pageable);
+        return taskRepository.findByGroup(group, pageable);
     }
 
 

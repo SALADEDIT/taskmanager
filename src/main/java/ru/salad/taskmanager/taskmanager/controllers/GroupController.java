@@ -5,9 +5,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.salad.taskmanager.taskmanager.dto.group.CreateGroupDTO;
 import ru.salad.taskmanager.taskmanager.dto.group.GetGroupDTO;
-import ru.salad.taskmanager.taskmanager.dto.group.UpdateGroupDTO;
+import ru.salad.taskmanager.taskmanager.dto.group.PostGroupDTO;
 import ru.salad.taskmanager.taskmanager.services.GroupService;
 import ru.salad.taskmanager.taskmanager.util.groupUtil.GroupErrorResponse;
 import ru.salad.taskmanager.taskmanager.util.groupUtil.GroupNotFoundException;
@@ -28,13 +27,13 @@ public class GroupController {
     }
 
     @PostMapping
-    public ResponseEntity<GetGroupDTO> create(@Valid @RequestBody CreateGroupDTO createGroupDTO) {
-        return new ResponseEntity<>(service.create(createGroupDTO), HttpStatus.CREATED);
+    public ResponseEntity<GetGroupDTO> create(@Valid @RequestBody PostGroupDTO postGroupDTO) {
+        return new ResponseEntity<>(service.create(postGroupDTO), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<GetGroupDTO> update(@PathVariable Integer id, @RequestBody UpdateGroupDTO updateGroupDTO) {
-        return new ResponseEntity<>(service.update(id, updateGroupDTO), HttpStatus.OK);
+    public ResponseEntity<GetGroupDTO> update(@PathVariable Integer id, @RequestBody PostGroupDTO postGroupDTO) {
+        return new ResponseEntity<>(service.update(id, postGroupDTO), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")

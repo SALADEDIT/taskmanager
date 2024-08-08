@@ -3,9 +3,8 @@ package ru.salad.taskmanager.taskmanager.services;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.salad.taskmanager.taskmanager.dto.group.CreateGroupDTO;
 import ru.salad.taskmanager.taskmanager.dto.group.GetGroupDTO;
-import ru.salad.taskmanager.taskmanager.dto.group.UpdateGroupDTO;
+import ru.salad.taskmanager.taskmanager.dto.group.PostGroupDTO;
 import ru.salad.taskmanager.taskmanager.entity.Group;
 import ru.salad.taskmanager.taskmanager.mapping.GroupMapper;
 import ru.salad.taskmanager.taskmanager.repositories.GroupRepository;
@@ -24,15 +23,15 @@ public class GroupService {
     }
 
     @Transactional
-    public GetGroupDTO create(CreateGroupDTO createGroupDTO) {
-        return mapper.groupToGetGroupDTO(repository.save(mapper.createGroupDTOToGroup(createGroupDTO)));
+    public GetGroupDTO create(PostGroupDTO postGroupDTO) {
+        return mapper.groupToGetGroupDTO(repository.save(mapper.postGroupDTOToGroup(postGroupDTO)));
     }
 
     @Transactional
-    public GetGroupDTO update(Integer id, UpdateGroupDTO updateGroupDTO) {
+    public GetGroupDTO update(Integer id, PostGroupDTO postGroupDTO) {
         Group group = repository.findById(id)
                 .orElseThrow(GroupNotFoundException::new);
-        group.setName(updateGroupDTO.getName());
+        group.setName(postGroupDTO.getName());
         return mapper.groupToGetGroupDTO(repository.save(group));
     }
 

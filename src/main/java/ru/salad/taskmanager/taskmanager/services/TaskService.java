@@ -18,6 +18,7 @@ import ru.salad.taskmanager.taskmanager.repositories.TaskRepository;
 import ru.salad.taskmanager.taskmanager.util.groupUtil.GroupNotFoundException;
 import ru.salad.taskmanager.taskmanager.util.taskUtil.TaskNotFoundException;
 
+import java.time.Instant;
 import java.util.Optional;
 
 @Service
@@ -38,14 +39,21 @@ public class TaskService {
         return new ResponseEntity<>(task, HttpStatus.OK);
     }
 
-    public Page<Task> getPages(Integer companyId, Integer page, Integer size, String sortBy, String sortDirection) {
+    public Page<Task> getPages(Integer companyId, Integer page, Integer size, String sortBy,
+                               String filter, String sortDirection, Instant startDate, Instant endDate) {
         Group group = groupRepository.findById(companyId)
                 .orElseThrow(GroupNotFoundException::new);
 
         Sort sort = Sort.by(Sort.Direction.fromString(sortDirection), sortBy);
         Pageable pageable = PageRequest.of(page, size, sort);
 
-        return taskRepository.findByGroup(group, pageable);
+        return switch (sortBy.toLowerCase()) {
+            case "title" -> taskRepository.findByGroupAndTitleContainingIgnoreCase(group, filter, pageable);
+            case "status" -> taskRepository.findByGroupAndStatusContainingIgnoreCase(group, filter, pageable);
+            case "deadline" -> taskRepository.findByGroupAndDeadlineBetween(group, startDate, endDate, pageable);
+            default -> taskRepository.findByGroup(group, pageable);
+        };
+
     }
 
     @Transactional

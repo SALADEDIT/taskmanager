@@ -1,36 +1,47 @@
 package ru.salad.taskmanager.taskmanager.services;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import ru.salad.taskmanager.taskmanager.dto.GroupDto;
+import ru.salad.taskmanager.taskmanager.dto.GroupDTO;
 import ru.salad.taskmanager.taskmanager.entity.Group;
-import ru.salad.taskmanager.taskmanager.entity.Task;
+import ru.salad.taskmanager.taskmanager.mapping.GroupMapper;
 import ru.salad.taskmanager.taskmanager.repositories.GroupRepository;
-
-import java.util.Optional;
+import ru.salad.taskmanager.taskmanager.util.groupUtil.GroupErrorResponse;
+import ru.salad.taskmanager.taskmanager.util.groupUtil.GroupNotFoundException;
+import ru.salad.taskmanager.taskmanager.util.taskUtil.TaskNotFoundException;
 
 @Service
 @RequiredArgsConstructor
 public class GroupService {
     private final GroupRepository groupRepository;
+    private final GroupMapper mapper;
 
-
-    public Optional<Group> getById(Integer id) {
-        return Optional.ofNullable(groupRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Компания с ID" + id + " не найдена")));
-    }
-
-    public Group create(Group group) {
-        return groupRepository.save(group);
-    }
-
-    public Group update(Integer id, Group request) {
+    public ResponseEntity<GroupDTO> getById(Integer id) {
         Group group = groupRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Таска не найдена"));
+                .orElseThrow(GroupNotFoundException::new);
+        GroupDTO groupDto = mapper.groupToGroupDTO(group);
+        return new ResponseEntity<>(groupDto, HttpStatus.OK);
+    }
 
-        group.setName(request.getName());
+    public ResponseEntity<GroupDTO> create(GroupDTO groupDTO) {
 
-        return groupRepository.save(group);
+        Group group = mapper.groupDTOToGroup(groupDTO);
+
+        Group created = groupRepository.save(group);
+        GroupDTO createdDto = mapper.groupToGroupDTO(created);
+        return new ResponseEntity<>(createdDto, HttpStatus.CREATED);
+    }
+
+    public ResponseEntity<GroupDTO> update(Integer id, GroupDTO groupDTO) {
+        Group group = groupRepository.findById(id)
+                .orElseThrow(GroupNotFoundException::new);
+        group.setName(groupDTO.getName());
+
+        Group updated = groupRepository.save(group);
+        GroupDTO updatedDto = mapper.groupToGroupDTO(updated);
+        return new ResponseEntity<>(updatedDto, HttpStatus.OK);
     }
 
     public void delete(Integer id) {

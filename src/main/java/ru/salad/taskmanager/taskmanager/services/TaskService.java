@@ -5,67 +5,96 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import ru.salad.taskmanager.taskmanager.dto.TaskDTO;
 import ru.salad.taskmanager.taskmanager.entity.Group;
 import ru.salad.taskmanager.taskmanager.entity.Task;
+import ru.salad.taskmanager.taskmanager.mapping.TaskMapper;
 import ru.salad.taskmanager.taskmanager.repositories.GroupRepository;
 import ru.salad.taskmanager.taskmanager.repositories.TaskRepository;
+import ru.salad.taskmanager.taskmanager.util.groupUtil.GroupNotFoundException;
+import ru.salad.taskmanager.taskmanager.util.taskUtil.TaskNotFoundException;
 
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class TaskService {
 
 
     private final TaskRepository taskRepository;
-
     private final GroupRepository groupRepository;
 
-
-    public Optional<Task> getById(Integer id) {
-
-        return Optional.ofNullable(taskRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Таска с ID " + id + " не найдена")));
-    }
+    private final TaskMapper mapper;
 
 
-    public Task update(Integer id, Task request) {
+    public ResponseEntity<Task> getById(Integer id) {
         Task task = taskRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Таска не найдена"));
-
-        task.setTitle(request.getTitle());
-        task.setDescription(request.getDescription());
-        task.setDeadLine(request.getDeadLine());
-        task.setStatus(request.getStatus());
-
-
-        if (request.getGroup() != null) {
-            Group group = groupRepository.findById(request.getGroup().getId())
-                    .orElseThrow(() -> new RuntimeException("Группа не найдена"));
-            task.setGroup(group);
-        }
-
-        return taskRepository.save(task);
+                .orElseThrow(() -> new RuntimeException("Таска с ID " + id + " не найдена"));
+        return new ResponseEntity<>(task, HttpStatus.OK);
     }
 
-    public Task createTask(Task task) {
-        return taskRepository.save(task);
-    }
-
-
-    public void deleteTask(Integer id) {
-        taskRepository.deleteById(id);
-    }
-
-    public Page<Task> getTasks(Integer companyId, Integer page, Integer size, String sortBy, String sortDirection) {
+    public Page<Task> getPages(Integer companyId, Integer page, Integer size, String sortBy, String sortDirection) {
         Group group = groupRepository.findById(companyId)
-                .orElseThrow(() -> new RuntimeException("Компания не найдена"));
+                .orElseThrow(GroupNotFoundException::new);
 
         Sort sort = Sort.by(Sort.Direction.fromString(sortDirection), sortBy);
         Pageable pageable = PageRequest.of(page, size, sort);
 
         return taskRepository.findByGroup(group, pageable);
+    }
+
+    @Transactional
+    public ResponseEntity<TaskDTO> create(TaskDTO taskDTO) {
+
+        Task task = mapper.taskDTOToTask(taskDTO);
+
+        if (taskDTO.getGroupId() != null) {
+            Optional<Group> group = groupRepository.findById(taskDTO.getGroupId());
+            if (group.isPresent()) {
+                task.setGroup(group.get());
+            } else {
+                return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            }
+        }
+
+        Task savedTask = taskRepository.save(task);
+
+        TaskDTO createdTaskDTO = mapper.taskToTaskDTO(savedTask);
+        return new ResponseEntity<>(createdTaskDTO, HttpStatus.CREATED);
+    }
+
+    @Transactional
+    public ResponseEntity<TaskDTO> update(Integer id, TaskDTO taskDTO) {
+        Task task = taskRepository.findById(id)
+                .orElseThrow(TaskNotFoundException::new);
+
+        task.setTitle(taskDTO.getTitle());
+        task.setDescription(taskDTO.getDescription());
+        task.setDeadLine(taskDTO.getDeadLine());
+        task.setStatus(taskDTO.getStatus());
+
+        if (taskDTO.getGroupId() != null) {
+            Optional<Group> group = groupRepository.findById(taskDTO.getGroupId());
+            if (group.isPresent()) {
+                task.setGroup(group.get());
+            } else {
+                return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            }
+        }
+
+        Task updated = taskRepository.save(task);
+        TaskDTO updatedDto = mapper.taskToTaskDTO(updated);
+        return new ResponseEntity<>(updatedDto, HttpStatus.OK);
+    }
+
+    @Transactional
+    public void delete(Integer id) {
+        taskRepository.deleteById(id);
     }
 
 

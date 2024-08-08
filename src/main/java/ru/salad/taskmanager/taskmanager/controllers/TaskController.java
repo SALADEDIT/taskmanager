@@ -1,14 +1,18 @@
 package ru.salad.taskmanager.taskmanager.controllers;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.salad.taskmanager.taskmanager.dto.TaskDTO;
 import ru.salad.taskmanager.taskmanager.entity.Task;
 import ru.salad.taskmanager.taskmanager.services.TaskService;
-
-import java.util.Optional;
+import ru.salad.taskmanager.taskmanager.util.taskUtil.TaskErrorResponse;
+import ru.salad.taskmanager.taskmanager.util.taskUtil.TaskNotFoundException;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -19,24 +23,23 @@ public class TaskController {
     private final TaskService service;
 
     @GetMapping("{id}")
-    public Optional<Task> getById(@PathVariable Integer id) {
+    public ResponseEntity<Task> getById(@PathVariable Integer id) {
         return service.getById(id);
     }
 
     @PutMapping("{id}")
-    public Task update(@PathVariable Integer id, @RequestBody Task request) {
+    public ResponseEntity<TaskDTO> update( @PathVariable Integer id, @Valid @RequestBody TaskDTO request) {
         return service.update(id, request);
     }
 
-    @DeleteMapping
-    public void delete(Integer id) {
-        service.deleteTask(id);
+    @DeleteMapping("{id}")
+    public void delete(@PathVariable Integer id) {
+        service.delete(id);
     }
 
     @PostMapping
-    public ResponseEntity<Task> create(@RequestBody Task task) {
-        Task createdTask = service.createTask(task);
-        return new ResponseEntity<>(createdTask, HttpStatus.CREATED);
+    public ResponseEntity<TaskDTO> create(@Valid @RequestBody TaskDTO taskDTO) {
+        return service.create(taskDTO);
     }
 
     @GetMapping
@@ -47,6 +50,16 @@ public class TaskController {
             @RequestParam(defaultValue = "status") String sortBy,
             @RequestParam(defaultValue = "asc") String sortDirection
     ) {
-        return service.getTasks(companyId, page, size, sortBy, sortDirection);
+        return service.getPages(companyId, page, size, sortBy, sortDirection);
+    }
+
+    @ExceptionHandler
+    private ResponseEntity<TaskErrorResponse> handleException(TaskNotFoundException exception) {
+        TaskErrorResponse response = new TaskErrorResponse(
+                "Таска с этим ID не найдена",
+                System.currentTimeMillis()
+        );
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+
     }
 }

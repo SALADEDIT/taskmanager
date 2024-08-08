@@ -9,7 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.salad.taskmanager.taskmanager.dto.TaskDTO;
+import ru.salad.taskmanager.taskmanager.dto.task.TaskDTO;
 import ru.salad.taskmanager.taskmanager.entity.Group;
 import ru.salad.taskmanager.taskmanager.entity.Task;
 import ru.salad.taskmanager.taskmanager.mapping.TaskMapper;

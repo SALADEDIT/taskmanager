@@ -4,11 +4,9 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.salad.taskmanager.taskmanager.dto.TaskDTO;
+import ru.salad.taskmanager.taskmanager.dto.task.TaskDTO;
 import ru.salad.taskmanager.taskmanager.entity.Task;
 import ru.salad.taskmanager.taskmanager.services.TaskService;
 import ru.salad.taskmanager.taskmanager.util.taskUtil.TaskErrorResponse;
@@ -22,17 +20,17 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 public class TaskController {
     private final TaskService service;
 
-    @GetMapping("{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<Task> getById(@PathVariable Integer id) {
         return service.getById(id);
     }
 
-    @PutMapping("{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<TaskDTO> update( @PathVariable Integer id, @Valid @RequestBody TaskDTO request) {
         return service.update(id, request);
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("/{id}")
     public void delete(@PathVariable Integer id) {
         service.delete(id);
     }

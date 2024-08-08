@@ -1,6 +1,5 @@
-package ru.salad.taskmanager.taskmanager.dto;
+package ru.salad.taskmanager.taskmanager.dto.task;
 
-import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;

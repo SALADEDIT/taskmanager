@@ -55,13 +55,13 @@ public class GroupController {
 
     }
 
-    @ExceptionHandler
-    private ResponseEntity<GroupErrorResponse> nameAlreadyExistsException(GroupNameAlreadyExistsException exception) {
-        GroupErrorResponse response = new GroupErrorResponse(
-                "Группа с таким именем уже существует",
-                System.currentTimeMillis()
-        );
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-
-    }
+//    @ExceptionHandler
+//    private ResponseEntity<GroupErrorResponse> nameAlreadyExistsException(GroupNameAlreadyExistsException exception) {
+//        GroupErrorResponse response = new GroupErrorResponse(
+//                "Группа с таким именем уже существует",
+//                System.currentTimeMillis()
+//        );
+//        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+//
+//    }
 }

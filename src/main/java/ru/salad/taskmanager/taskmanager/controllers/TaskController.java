@@ -16,10 +16,9 @@ import ru.salad.taskmanager.taskmanager.util.taskUtil.TaskNotFoundException;
 
 import java.time.Instant;
 
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
-
 @RestController
-@RequestMapping(value = "/task", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
+//@RequestMapping(value = "/task", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/task")
 @RequiredArgsConstructor
 public class TaskController {
     private final TaskService service;

@@ -11,10 +11,9 @@ import ru.salad.taskmanager.taskmanager.services.GroupService;
 import ru.salad.taskmanager.taskmanager.util.groupUtil.GroupErrorResponse;
 import ru.salad.taskmanager.taskmanager.util.groupUtil.GroupNotFoundException;
 
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
-
 @RestController
-@RequestMapping(value = "/group", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
+//@RequestMapping(value = "/group", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/group")
 @RequiredArgsConstructor
 public class GroupController {
 
@@ -39,7 +38,7 @@ public class GroupController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Integer id) {
         service.delete(id);
-            return ResponseEntity.noContent().build();
+        return ResponseEntity.noContent().build();
     }
 
     @ExceptionHandler

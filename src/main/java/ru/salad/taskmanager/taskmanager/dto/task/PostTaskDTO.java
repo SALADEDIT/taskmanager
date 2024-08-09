@@ -12,6 +12,7 @@ import java.time.Instant;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PostTaskDTO {
+
     @Size(min = 2, max = 100, message = "Заголовок должен содержать от 2 до 100 символов")
     private String title;
     private String description;

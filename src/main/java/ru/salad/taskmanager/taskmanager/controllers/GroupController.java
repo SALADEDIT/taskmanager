@@ -14,7 +14,7 @@ import ru.salad.taskmanager.taskmanager.util.groupUtil.GroupNotFoundException;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
-@RequestMapping(value = "/company", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/group", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 public class GroupController {
 
@@ -32,13 +32,14 @@ public class GroupController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<GetGroupDTO> update(@PathVariable Integer id, @RequestBody PostGroupDTO postGroupDTO) {
+    public ResponseEntity<GetGroupDTO> update(@PathVariable Integer id, @Valid @RequestBody PostGroupDTO postGroupDTO) {
         return new ResponseEntity<>(service.update(id, postGroupDTO), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Integer id) {
+    public ResponseEntity<Void> delete(@PathVariable Integer id) {
         service.delete(id);
+            return ResponseEntity.noContent().build();
     }
 
     @ExceptionHandler

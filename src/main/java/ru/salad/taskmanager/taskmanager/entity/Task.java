@@ -41,12 +41,4 @@ public class Task {
     @JoinColumn(name = "group_id")
     @JsonBackReference
     private Group group;
-
-    public Task(String title, String description, Instant deadLine, Status status, Group group) {
-        this.title = title;
-        this.description = description;
-        this.deadLine = deadLine;
-        this.status = status;
-        this.group = group;
-    }
 }

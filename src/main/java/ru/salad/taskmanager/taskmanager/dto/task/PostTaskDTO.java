@@ -11,14 +11,11 @@ import java.time.Instant;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class TaskDTO {
-
-
+public class PostTaskDTO {
     @Size(min = 2, max = 100, message = "Заголовок должен содержать от 2 до 100 символов")
     private String title;
     private String description;
     private Instant deadLine;
-//    @Pattern(regexp = "DONE|IN_PROGRESS|CLOSED", message = "Invalid status value")
     private Status status;
     private Integer groupId;
 }

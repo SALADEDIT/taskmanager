@@ -7,7 +7,8 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.salad.taskmanager.taskmanager.dto.task.TaskDTO;
+import ru.salad.taskmanager.taskmanager.dto.task.GetTaskDTO;
+import ru.salad.taskmanager.taskmanager.dto.task.PostTaskDTO;
 import ru.salad.taskmanager.taskmanager.entity.Task;
 import ru.salad.taskmanager.taskmanager.services.TaskService;
 import ru.salad.taskmanager.taskmanager.util.taskUtil.TaskErrorResponse;
@@ -25,22 +26,23 @@ public class TaskController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Task> getById(@PathVariable Integer id) {
-        return service.getById(id);
+        return new ResponseEntity<>(service.getById(id), HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<TaskDTO> update(@PathVariable Integer id, @Valid @RequestBody TaskDTO request) {
-        return service.update(id, request);
+    public ResponseEntity<GetTaskDTO> update(@PathVariable Integer id, @Valid @RequestBody PostTaskDTO postTaskDTO) {
+        return new ResponseEntity<>(service.update(id, postTaskDTO), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Integer id) {
+    public ResponseEntity<Void> delete(@PathVariable Integer id) {
         service.delete(id);
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping
-    public ResponseEntity<TaskDTO> create(@Valid @RequestBody TaskDTO taskDTO) {
-        return service.create(taskDTO);
+    public ResponseEntity<GetTaskDTO> create(@Valid @RequestBody PostTaskDTO postTaskDTO) {
+        return new ResponseEntity<>(service.create(postTaskDTO), HttpStatus.CREATED);
     }
 
     @GetMapping
@@ -54,6 +56,8 @@ public class TaskController {
             @RequestParam(required = false, defaultValue = "") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant startDate,
             @RequestParam(required = false, defaultValue = "") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant endDate
     ) {
+        // Pageable pageable = service.preparePageable(page, size, sortBy, filter, sortDirection, startDate, endDate);
+        // service.getPages(companyId, pageable);
         return service.getPages(companyId, page, size, sortBy, filter, sortDirection, startDate, endDate);
     }
 

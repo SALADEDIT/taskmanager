@@ -24,6 +24,7 @@ public class GroupService {
 
     @Transactional
     public GetGroupDTO create(PostGroupDTO postGroupDTO) {
+        // Такая вложенность норм с позиции читаемости?
         return mapper.groupToGetGroupDTO(repository.save(mapper.postGroupDTOToGroup(postGroupDTO)));
     }
 
@@ -31,7 +32,8 @@ public class GroupService {
     public GetGroupDTO update(Integer id, PostGroupDTO postGroupDTO) {
         Group group = repository.findById(id)
                 .orElseThrow(GroupNotFoundException::new);
-        group.setName(postGroupDTO.getName());
+
+        mapper.updateGroup(group, postGroupDTO);
         return mapper.groupToGetGroupDTO(repository.save(group));
     }
 

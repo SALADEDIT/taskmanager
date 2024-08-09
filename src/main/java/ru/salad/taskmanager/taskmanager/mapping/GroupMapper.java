@@ -6,9 +6,7 @@ import org.mapstruct.MappingTarget;
 import org.mapstruct.factory.Mappers;
 import ru.salad.taskmanager.taskmanager.dto.group.GetGroupDTO;
 import ru.salad.taskmanager.taskmanager.dto.group.PostGroupDTO;
-import ru.salad.taskmanager.taskmanager.dto.task.GetTaskDTO;
 import ru.salad.taskmanager.taskmanager.entity.Group;
-import ru.salad.taskmanager.taskmanager.entity.Task;
 
 @Mapper(componentModel = "spring")
 public interface GroupMapper {
@@ -17,7 +15,6 @@ public interface GroupMapper {
 
     @Mapping(target = "id", ignore = true)
     void updateGroup(@MappingTarget Group group, PostGroupDTO postGroupDTO);
-
 
     GetGroupDTO groupToGetGroupDTO(Group group);
 

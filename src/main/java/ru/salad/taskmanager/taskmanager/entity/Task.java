@@ -23,7 +23,6 @@ public class Task {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    
     @Column(name = "title")
     private String title;
 

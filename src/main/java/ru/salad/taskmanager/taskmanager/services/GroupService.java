@@ -14,6 +14,7 @@ import ru.salad.taskmanager.taskmanager.util.groupUtil.GroupNotFoundException;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class GroupService {
+
     private final GroupRepository repository;
     private final GroupMapper mapper;
 
@@ -34,6 +35,7 @@ public class GroupService {
                 .orElseThrow(GroupNotFoundException::new);
 
         mapper.updateGroup(group, postGroupDTO);
+
         return mapper.groupToGetGroupDTO(repository.save(group));
     }
 

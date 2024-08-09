@@ -4,6 +4,7 @@ import lombok.Data;
 
 @Data
 public class TaskErrorResponse {
+
     private String message;
     private Long timestamp;
 

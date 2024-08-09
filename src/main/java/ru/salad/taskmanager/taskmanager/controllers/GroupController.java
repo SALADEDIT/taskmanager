@@ -17,7 +17,6 @@ import ru.salad.taskmanager.taskmanager.util.groupUtil.GroupNotFoundException;
 @RequiredArgsConstructor
 public class GroupController {
 
-
     private final GroupService service;
 
     @GetMapping("/{id}")
@@ -48,16 +47,5 @@ public class GroupController {
                 System.currentTimeMillis()
         );
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
-
     }
-
-//    @ExceptionHandler
-//    private ResponseEntity<GroupErrorResponse> nameAlreadyExistsException(GroupNameAlreadyExistsException exception) {
-//        GroupErrorResponse response = new GroupErrorResponse(
-//                "Группа с таким именем уже существует",
-//                System.currentTimeMillis()
-//        );
-//        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-//
-//    }
 }

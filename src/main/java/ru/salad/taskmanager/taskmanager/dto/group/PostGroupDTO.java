@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PostGroupDTO {
+
     private Integer id;
     @Size(min = 2, max = 100, message = "Название не должно содержать меньше 2 и больше 100 букв")
     private String name;

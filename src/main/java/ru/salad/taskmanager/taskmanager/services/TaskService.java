@@ -18,13 +18,11 @@ import ru.salad.taskmanager.taskmanager.util.groupUtil.GroupNotFoundException;
 import ru.salad.taskmanager.taskmanager.util.taskUtil.TaskNotFoundException;
 
 import java.time.Instant;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class TaskService {
-
 
     private final TaskRepository taskRepository;
     private final GroupRepository groupRepository;
@@ -51,9 +49,9 @@ public class TaskService {
             case "deadline" -> taskRepository.findByGroupAndDeadlineBetween(group, startDate, endDate, pageable);
             default -> taskRepository.findByGroup(group, pageable);
         };
-
     }
-@Transactional
+
+    @Transactional
     public GetTaskDTO create(PostTaskDTO postTaskDTO) {
 
         Task task = mapper.postTaskDTOToTask(postTaskDTO);
@@ -87,6 +85,4 @@ public class TaskService {
     public void delete(Integer id) {
         taskRepository.deleteById(id);
     }
-
-
 }

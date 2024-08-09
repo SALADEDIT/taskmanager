@@ -55,8 +55,6 @@ public class TaskController {
             @RequestParam(required = false, defaultValue = "") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant startDate,
             @RequestParam(required = false, defaultValue = "") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant endDate
     ) {
-        // Pageable pageable = service.preparePageable(page, size, sortBy, filter, sortDirection, startDate, endDate);
-        // service.getPages(companyId, pageable);
         return service.getPages(companyId, page, size, sortBy, filter, sortDirection, startDate, endDate);
     }
 
@@ -67,6 +65,5 @@ public class TaskController {
                 System.currentTimeMillis()
         );
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
-
     }
 }

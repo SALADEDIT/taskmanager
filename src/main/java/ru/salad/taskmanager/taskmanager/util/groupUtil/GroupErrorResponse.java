@@ -4,6 +4,7 @@ import lombok.Data;
 
 @Data
 public class GroupErrorResponse {
+
     private String message;
     private Long timestamp;
 
